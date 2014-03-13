@@ -6,6 +6,7 @@
 
 /* src/observable.c */
 extern int modulation P_((struct transit *tr));
+extern int emergent_intens P_((struct transit *tr));
 extern void printmod P_((struct transit *tr));
 extern int freemem_outputray P_((struct outputray *out, long *pi));
 
