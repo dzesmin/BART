@@ -27,24 +27,25 @@
 struct transit;
 struct geometry;
 
+/* Type of ray solution, eclipse or transit */
+typedef enum {transit, eclipse}  RaySol; 
+
 /* Structure definitions */
-typedef struct {    /* Sampling struct        */
-  PREC_NREC n;      /* Number of elements     */
-  PREC_RES d;       /* Spacing                */
-  PREC_RES i;       /* Initial value          */
-  PREC_RES f;       /* Final value            */
-  int o;            /* Oversampling           */
-  PREC_RES *v;      /* Values of the sampling */
-  double fct;       /* v units factor to cgs  */
+typedef struct {    /* Sampling struct               */
+  PREC_NREC n;      /* Number of elements              */
+  PREC_RES d;       /* Spacing                         */
+  PREC_RES i;       /* Initial value                   */
+  PREC_RES f;       /* Final value                     */
+  int o;            /* Oversampling                    */
+  PREC_RES *v;      /* Values of the sampling           */
+  double fct;       /* v units factor to cgs           */
 } prop_samp;
 
 
 typedef struct {    /* Isotope's variable (per layer) information: */
+  unsigned int n;   /* Arrays' length                              */
   double *z;        /* Partition function [radius or temp]         */
   double *c;        /* Cross section      [radius or temp]         */
-  PREC_ATM *d;      /* Density   [nradius]                         */ 
-  PREC_ATM *q;      /* Abundance [nradius]                         */ 
-  unsigned int n;   /* Arrays' length                              */
 } prop_isov;
 
 
@@ -53,6 +54,13 @@ typedef struct {    /* Isotope's fixed information:  */
   char *n;          /* Isotope name                  */
   PREC_ZREC m;      /* Isotope mass                  */
 } prop_isof;
+
+
+typedef struct{    /* Molecule's information: */
+  int n;           /* Number of elements      */
+  PREC_ATM *d;     /* Density   [n]           */
+  PREC_ATM *q;     /* Abundance [n]           */
+} prop_mol;
 
 
 typedef struct {    /* Atmospheric conditions:          */
@@ -88,10 +96,6 @@ typedef struct {         /* Ray solution properties:              */
         PREC_RES *ex,    /*  Extinction[rad]                      */
         long nrad,       /*  Number of radii elements             */
         int exprlevel);  /*  FINDME                               */
-  PREC_RES (*tauEclipse)    /* Optical depth for eclipse per wn:   */                        /* JASMINA ADDED  JB */
-       (PREC_RES *rad,   /*  Radius array                         */                      /* JASMINA ADDED  JB */
-        PREC_RES *ex,    /*  Extinction[rad]                      */                      /* JASMINA ADDED  JB */
-        long nrad);   /* Number of radii elements */
   PREC_RES (*obsperwn)         /* Integrated optical depth:          */
         (PREC_RES *tau,        /*  Optical depth                     */
         long last,             /*  index where tau exceeded toomuch  */
@@ -99,17 +103,27 @@ typedef struct {         /* Ray solution properties:              */
         prop_samp *ip,         /*  Impact parameter                  */
         struct geometry *star, /*  Geometry structure                */
         int exprlevel);        /*  Modulation level                  */
-  PREC_RES (*eclIntenWn)         /* Integrated optical depth:          */
-                                 /* JASMINA ADDED  JB */
-        (struct transit *tr, /* Main structure */
-        PREC_RES *tau,        /*  Optical depth                     */
-        PREC_RES w,            /* Current wavenumber value    */
-        long last,             /*  Index where tau exceeded toomuch  */
-        PREC_RES toomuch,      /*  Cutoff optical depth to calculate */ 
-        prop_samp *rad);         /*  Impact parameter                  */
   const int nobs;        /* Number of levels of details as it can
                             be handled by obsperwn                */
 } transit_ray_solution;
+
+
+typedef struct {            /* Ray solution properties:                 */
+  const char *name;          /* Ray solution name                        */
+  const char *file;          /* Ray solution filename (FINDME)           */
+  PREC_RES (*tauEclipse)      /* Optical depth for eclipse per wavenumber */
+       (PREC_RES *rad,        /*  Radius array                            */ 
+        PREC_RES *ex,         /*  Extinction[rad]                         */  
+        long nrad);           /* Number of radii elements                */
+  PREC_RES (*eclIntenWn)       /* Integrated optical depth:               */
+        (struct transit *tr,  /* Main structure                           */
+        PREC_RES *tau,         /*  Optical depth                           */
+        PREC_RES w,            /* Current wavenumber value                 */
+        long last,             /*  Index where tau exceeded toomuch       */
+        PREC_RES toomuch,      /*  Cutoff optical depth to calculate       */ 
+        prop_samp *rad);       /*  Impact parameter                        */
+} eclipse_ray_solution;
+
 
 
 struct atm_isoprop{    /* Proportional-abundance isotopic parameters: */
@@ -151,22 +165,13 @@ struct lineinfo{             /* Line information parameters:    */
 
 
 struct atm_data{     /* Atmospheric file parameters:                    */
-  struct atm_isoprop *isoprop; /* Proportional-abundance isotopes info  */
-  int ipa;           /* Number of elements in isoprop                   */
+  int n_aiso;        /* Number of molecules in atmosphere file          */
   prop_samp rads;    /* Radius sampling                                 */
-  prop_isov *isov;   /* Variable isotope info [isoext]                  */
   prop_atm atm;      /* Atmospheric properties                          */
-  int n_niso;        /* Number of new isotopes                          */
+  prop_mol *molec;   /* Molecular information [n_aiso]                  */
   double *mm;        /* Mean molecular mass [rad]                       */
-  _Bool mass;        /* Abundances in isov by mass (1) of by number (0) */
-  char **n;          /* Isotopes name                                   */
-  double *m;         /* Isotopes mass  [iso]                            */
-  int *isoeq;        /* Index of isotope in lineinfo                    */
-  enum isodo *isodo; /* What is required from each isotope, it can
-                        be given, ignore, or fixed                      */
-  int n_nonignored;  /* Number of non ignored isotopes                  */
-  int n_aiso;        /* Number of isotopes in atmosphere file           */
   char *info;        /* Optional atmosphere file information or label   */
+  _Bool mass;        /* Abundances in isov by mass (1) of by number (0) */
   int begline;       /* Line of first radius dependent info             */
   long begpos;       /* Position of first radius dependent info         */
 };
@@ -246,7 +251,7 @@ struct geometry{
   double starrad;     /* Star's radius                                     */
   double starradfct;  /* 'starrad' times this gives cgs units.             */
 
-  double x,y;         /* coordinates of the center of the planet with
+  double x, y;        /* Coordinates of the center of the planet with
                          respect to the star. 'fct' to convert to cgs is
                          found in rads.fct. These fields are not hinted.   */
 
@@ -255,12 +260,21 @@ struct geometry{
 
 
 struct isotopes{
-  enum isodo *isodo;  /* What to do with every isotope               */
-  prop_isof *isof;    /* Fixed isotope information [isoextended]     */
-  prop_isov *isov;    /* Variable isotope information [isoextended]  */
-  prop_db *db;        /* Database's info [DB]                        */
-  int n_db,n_i,n_e;   /* Number of databases, of regular isotopes,
-                         of extended isotopes                        */
+  prop_isof *isof;    /* Fixed isotope information      [n_i] */
+  prop_isov *isov;    /* Variable isotope information   [n_i] */
+  double *isoratio;   /* Isotopic abundance ratio       [n_i] */
+  int *imol;          /* Molecule index for this isotope[n_i] */
+  prop_db *db;        /* Database's info [n_db]               */
+  int n_db,           /* Number of databases                  */
+      n_i;            /* Number of isotopes                   */
+};
+
+struct molecules{
+  int nmol;        /* Number of molecules  */
+  prop_mol *molec; /* Molecular properties */
+  char **name;     /* Molecules' names     */
+  PREC_ZREC *mass; /* Molecules' masses    */
+  double *radius;  /* Molecules' radii     */
 };
 
 
@@ -316,6 +330,7 @@ struct transithint{
   PREC_NREC ot;         /* Radius index at which to print output from tau    */
   prop_samp rads, wavs, wns; /* Sampling properties of radius, wavelength
                                 and wavenumber                               */
+  RaySol  path;         /* Eclipse or transit ray solution. */
   prop_samp ips;        /* Impact parameter sampling, at what radius
                            sampling does the user wants ray optical depth to
                            be calculated                                     */
@@ -394,7 +409,8 @@ struct transit{
   long fl;          /* flags                                                 */
   long pi;          /* progress indicator                                    */
 
-  transit_ray_solution *sol; /* Solution type                                */
+  transit_ray_solution *sol; /* Transit solution type                        */
+  eclipse_ray_solution *ecl; /* Eclipse solution type                        */
   PREC_RES *outpret; /* Output dependent on wavelength only as it travels
                         to Earth before telescope                            */
 
@@ -413,6 +429,7 @@ struct transit{
     struct savefiles   *sf;
 #endif
     struct isotopes    *iso;
+    struct molecules   *mol;
     struct outputray   *out;
     struct extcloud    *cl;
     struct extscat     *sc;

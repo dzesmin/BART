@@ -11,11 +11,11 @@ src/voigt.o src/voigt.o.d: src/voigt.c include/pu/profile.h /usr/include/math.h 
  /usr/include/x86_64-linux-gnu/bits/nan.h \
  /usr/include/x86_64-linux-gnu/bits/mathdef.h \
  /usr/include/x86_64-linux-gnu/bits/mathcalls.h /usr/include/stdlib.h \
- /usr/lib/gcc/x86_64-linux-gnu/4.6.1/include/stddef.h \
- /usr/include/stdio.h /usr/include/x86_64-linux-gnu/bits/types.h \
+ /usr/lib/gcc/x86_64-linux-gnu/4.6/include/stddef.h /usr/include/stdio.h \
+ /usr/include/x86_64-linux-gnu/bits/types.h \
  /usr/include/x86_64-linux-gnu/bits/typesizes.h /usr/include/libio.h \
  /usr/include/_G_config.h /usr/include/wchar.h \
- /usr/lib/gcc/x86_64-linux-gnu/4.6.1/include/stdarg.h \
+ /usr/lib/gcc/x86_64-linux-gnu/4.6/include/stdarg.h \
  /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
  /usr/include/x86_64-linux-gnu/bits/sys_errlist.h
 src/voigt.c include/pu/profile.h /usr/include/math.h:
@@ -31,10 +31,10 @@ src/voigt.c include/pu/profile.h /usr/include/math.h:
 /usr/include/x86_64-linux-gnu/bits/nan.h:
 /usr/include/x86_64-linux-gnu/bits/mathdef.h:
 /usr/include/x86_64-linux-gnu/bits/mathcalls.h /usr/include/stdlib.h:
-/usr/lib/gcc/x86_64-linux-gnu/4.6.1/include/stddef.h:
-/usr/include/stdio.h /usr/include/x86_64-linux-gnu/bits/types.h:
+/usr/lib/gcc/x86_64-linux-gnu/4.6/include/stddef.h /usr/include/stdio.h:
+/usr/include/x86_64-linux-gnu/bits/types.h:
 /usr/include/x86_64-linux-gnu/bits/typesizes.h /usr/include/libio.h:
 /usr/include/_G_config.h /usr/include/wchar.h:
-/usr/lib/gcc/x86_64-linux-gnu/4.6.1/include/stdarg.h:
+/usr/lib/gcc/x86_64-linux-gnu/4.6/include/stdarg.h:
 /usr/include/x86_64-linux-gnu/bits/stdio_lim.h:
 /usr/include/x86_64-linux-gnu/bits/sys_errlist.h:

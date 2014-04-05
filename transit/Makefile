@@ -77,6 +77,10 @@ INCLFLAGS   = -I/usr/X11R6/include -I/home/devel/include \
 LIBFLAGS    = -L/usr/X11R6/lib -L/home/devel/lib
 CPROTOFLAGS = $(INCLFLAGS) $(GSLPRM) -f 3 -m -e -i -X 0
 
+#included old Rojo's prompt command
+#code now compiles with 'make transit'
+PUFLAGS="-I../pu/include -L../pu"
+
 NODBGFLAGS  = 
 DBGFLAGS    = -g3 -gdwarf-2
 ifdef NODEBUG
@@ -85,7 +89,7 @@ else
 STDFLAGS    = $(DBGFLAGS)
 endif
 STDFLAGS   += $(INCLFLAGS) $(LIBFLAGS) $(WARNFLAGS) -pedantic \
-	      -std=c99 $(EXTPRM) $(CPUOPTION) $(GSLPRM) $(CFLAGS)
+	      -std=c99 $(EXTPRM) $(CPUOPTION) $(GSLPRM) $(CFLAGS) $(PUFLAGS)
 
 #libraries to link
 LIBS  = -lm $(GSLLIB) -lpu

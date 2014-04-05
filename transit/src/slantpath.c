@@ -291,65 +291,65 @@ totaltau(PREC_RES b,      /* Differential impact parameter WRT maximum value */
    1 - in-transit/out-of-transit flux ratio (Equation 3.12):
     M_{\lambda} = \frac{1}{R_\star^2}\left(R^2 - 
                    2\int_{0}^{R} \exp^{-\tau_\lambda(r)} r\,{\rm d}r\right)  */
-//static PREC_RES
-//modulation1(PREC_RES *tau,        /* Optical depth array              */
-//            long last,            /* Index where tau = toomuch        */
-//            double toomuch,       /* Maximum optical depth calculated */
-//            prop_samp *ip,        /* Impact parameter                 */
-//            struct geometry *sg){ /* Geometry struct                  */
+static PREC_RES
+modulation1(PREC_RES *tau,        /* Optical depth array              */
+            long last,            /* Index where tau = toomuch        */
+            double toomuch,       /* Maximum optical depth calculated */
+            prop_samp *ip,        /* Impact parameter                 */
+            struct geometry *sg){ /* Geometry struct                  */
   /* General variables: */
-//  PREC_RES res;
+  PREC_RES res;
   /* Stellar radius:    */
-//  double srad = sg->starrad*sg->starradfct;
+  double srad = sg->starrad*sg->starradfct;
 
   /* Impact parameter variables: */
-//  long ipn  = ip->n;
-//  long ipn1 = ipn-1;
-//  long i;
+  long ipn  = ip->n;
+  long ipn1 = ipn-1;
+  long i;
 
   /* Max overall tau, for the tr.ds.sg.transparent=True case */
-//  const PREC_RES maxtau = tau[last]>toomuch?tau[last]:toomuch;
+  const PREC_RES maxtau = tau[last]>toomuch?tau[last]:toomuch;
   /* Integral part: */
-//  PREC_RES rinteg[ipn], /* Integrand */
-//           ipv[ipn];    /* Impact paramter where to integrate */
+  PREC_RES rinteg[ipn], /* Integrand */
+           ipv[ipn];    /* Impact paramter where to integrate */
 
   /* Integrate for each of the planet's layer starting from the
      outermost until the closest layer  */
-//  for(i=0; i<=last; i++){
-//    ipv   [ipn1-i] = ip->v[i] * ip->fct;
-//    rinteg[ipn1-i] = exp(-tau[i]) * ipv[ipn1-i];
-//  }
+  for(i=0; i<=last; i++){
+    ipv   [ipn1-i] = ip->v[i] * ip->fct;
+    rinteg[ipn1-i] = exp(-tau[i]) * ipv[ipn1-i];
+  }
   /* Add one more layer with 0. Only two to have a nice ending
     spline and not unnecessary values: */
-//  last += 1;
-//  if(last>ipn1) last = ipn1;
-//  for(; i<=last; i++){
-//    ipv   [ipn1-i] = ip->v[i] * ip->fct;
-//    rinteg[ipn1-i] = 0;
-//  }
+  last += 1;
+  if(last>ipn1) last = ipn1;
+  for(; i<=last; i++){
+    ipv   [ipn1-i] = ip->v[i] * ip->fct;
+    rinteg[ipn1-i] = 0;
+  }
   /* FINDME: there is no need to use a for-loop here, the first two lines
      are confusing also. This could have been written much simpler        */
 
   /* Increment last to represent the number of elements, check that we
      have enough: */
-//  last++;
-//  if(last<3)
-//    transiterror(TERR_CRITICAL,
-//                 "Condition failed, less than 3 items (only %i) for radial "
-//                 "integration.\n", last);
+  last++;
+  if(last<3)
+    transiterror(TERR_CRITICAL,
+                 "Condition failed, less than 3 items (only %i) for radial "
+                 "integration.\n", last);
 
   /* Integrate along radius: */
-//#ifdef _USE_GSL
-//  gsl_interp_accel *acc = gsl_interp_accel_alloc();
-//  gsl_interp *spl       = gsl_interp_alloc(gsl_interp_cspline, last);
-//  gsl_interp_init(spl, ipv+ipn-last, rinteg+ipn-last, last);
-//  res = gsl_interp_eval_integ(spl, ipv+ipn-last, rinteg+ipn-last,
-//                               ipv[ipn-last], ipv[ipn1], acc);
-//  gsl_interp_free(spl);
-//  gsl_interp_accel_free (acc);
-//#else
-//# error computation of modulation() without GSL is not implemented
-//#endif
+#ifdef _USE_GSL
+  gsl_interp_accel *acc = gsl_interp_accel_alloc();
+  gsl_interp *spl       = gsl_interp_alloc(gsl_interp_cspline, last);
+  gsl_interp_init(spl, ipv+ipn-last, rinteg+ipn-last, last);
+  res = gsl_interp_eval_integ(spl, ipv+ipn-last, rinteg+ipn-last,
+                               ipv[ipn-last], ipv[ipn1], acc);
+  gsl_interp_free(spl);
+  gsl_interp_accel_free (acc);
+#else
+# error computation of modulation() without GSL is not implemented
+#endif
 
   /* TD: Add real unblocked area of the star, considering geometry */
   /* Substract the total area blocked by the planet. This is from the
@@ -363,18 +363,18 @@ totaltau(PREC_RES b,      /* Differential impact parameter WRT maximum value */
                 \ +\ r_p^2} {\pi R_s^2}   
      \end{eqnarray}                                                */
 
-//  res = ipv[ipn1]*ipv[ipn1] - 2.0*res;
+  res = ipv[ipn1]*ipv[ipn1] - 2.0*res;
 
   /* If the planet is going to be transparent with its maximum optical
      depth given by toomuch then: */
-//  if(sg->transpplanet)
-//    res -= exp(-maxtau) * ipv[ipn-last] * ipv[ipn-last];
+  if(sg->transpplanet)
+    res -= exp(-maxtau) * ipv[ipn-last] * ipv[ipn-last];
 
   /* Normalize by the stellar radius: */
-//  res *= 1.0 / (srad*srad);
+  res *= 1.0 / (srad*srad);
 
-//  return res;
-//}
+  return res;
+}
 
 
 /* \fcnfh
@@ -418,37 +418,37 @@ modulationm1(PREC_RES *tau,        /* Optical depth array              */
    Wrapper function to calculate the modulation in/out-of-transit ratio.
 
    Return: modulation                                      */
-//static PREC_RES
-//modulationperwn(PREC_RES *tau,       /* Optical depth                    */
-//                long last,           /* Radius index where tau = toomuch */
-//                double toomuch,      /* Maximum optical depth calculated */
-//                prop_samp *ip,       /* Impact parameter array           */
-//                struct geometry *sg, /* Geometry struct                  */
-//                int exprlevel){      /* Modlevel                         */
-//  switch(exprlevel){
-//  case 1:
-//    return modulation1(tau,  last, toomuch, ip, sg);
-//    break;
-//  case -1:
-//    return modulationm1(tau, last, toomuch, ip, sg);
-//    break;
-//  default:
-//    transiterror(TERR_CRITICAL,
-//                 "slantpath:: modulationperwn:: Level %i of detail "
-//                 "has not been implemented to compute modulation.\n",
-//                 exprlevel);
-//    return 0;
-//  }
-//}
+static PREC_RES
+modulationperwn(PREC_RES *tau,       /* Optical depth                    */
+                long last,           /* Radius index where tau = toomuch */
+                double toomuch,      /* Maximum optical depth calculated */
+                prop_samp *ip,       /* Impact parameter array           */
+                struct geometry *sg, /* Geometry struct                  */
+                int exprlevel){      /* Modlevel                         */
+  switch(exprlevel){
+  case 1:
+    return modulation1(tau,  last, toomuch, ip, sg);
+    break;
+  case -1:
+    return modulationm1(tau, last, toomuch, ip, sg);
+    break;
+  default:
+    transiterror(TERR_CRITICAL,
+                 "slantpath:: modulationperwn:: Level %i of detail "
+                 "has not been implemented to compute modulation.\n",
+                 exprlevel);
+    return 0;
+  }
+}
 
 
-//const transit_ray_solution slantpath = {
-//       "Slant Path",     /* Name of the solution                     */
-//       "slantpath.c",    /* Source code file name                    */
-//       1,                /* Equispaced impact parameter requested?   */
-//       &totaltau,        /* Per impact parameter and per wavenumber 
-//                            value computation                        */
-//       &modulationperwn, /* Per wavenumber value computation         */
-//       1                 /* Number of levels of modulation detail as
-//                            it can be handled by the above fucntion  */
-//       };
+const transit_ray_solution slantpath = {
+       "Slant Path",     /* Name of the solution                     */
+       "slantpath.c",    /* Source code file name                    */
+       1,                /* Equispaced impact parameter requested?   */
+       &totaltau,        /* Per impact parameter and per wavenumber 
+                            value computation                        */
+       &modulationperwn, /* Per wavenumber value computation         */
+       1                 /* Number of levels of modulation detail as
+                            it can be handled by the above fucntion  */
+       };

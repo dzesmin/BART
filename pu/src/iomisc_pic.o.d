@@ -7,9 +7,9 @@ src/iomisc_pic.o src/iomisc_pic.o.d: src/iomisc.c include/pu/iomisc.h /usr/inclu
  /usr/include/x86_64-linux-gnu/bits/types.h \
  /usr/include/x86_64-linux-gnu/bits/typesizes.h /usr/include/endian.h \
  /usr/include/x86_64-linux-gnu/bits/endian.h /usr/include/stdio.h \
- /usr/lib/gcc/x86_64-linux-gnu/4.6.1/include/stddef.h \
- /usr/include/libio.h /usr/include/_G_config.h /usr/include/wchar.h \
- /usr/lib/gcc/x86_64-linux-gnu/4.6.1/include/stdarg.h \
+ /usr/lib/gcc/x86_64-linux-gnu/4.6/include/stddef.h /usr/include/libio.h \
+ /usr/include/_G_config.h /usr/include/wchar.h \
+ /usr/lib/gcc/x86_64-linux-gnu/4.6/include/stdarg.h \
  /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
  /usr/include/x86_64-linux-gnu/bits/sys_errlist.h /usr/include/stdlib.h \
  /usr/include/unistd.h /usr/include/x86_64-linux-gnu/bits/posix_opt.h \
@@ -24,9 +24,9 @@ src/iomisc.c include/pu/iomisc.h /usr/include/ctype.h:
 /usr/include/x86_64-linux-gnu/bits/types.h:
 /usr/include/x86_64-linux-gnu/bits/typesizes.h /usr/include/endian.h:
 /usr/include/x86_64-linux-gnu/bits/endian.h /usr/include/stdio.h:
-/usr/lib/gcc/x86_64-linux-gnu/4.6.1/include/stddef.h:
-/usr/include/libio.h /usr/include/_G_config.h /usr/include/wchar.h:
-/usr/lib/gcc/x86_64-linux-gnu/4.6.1/include/stdarg.h:
+/usr/lib/gcc/x86_64-linux-gnu/4.6/include/stddef.h /usr/include/libio.h:
+/usr/include/_G_config.h /usr/include/wchar.h:
+/usr/lib/gcc/x86_64-linux-gnu/4.6/include/stdarg.h:
 /usr/include/x86_64-linux-gnu/bits/stdio_lim.h:
 /usr/include/x86_64-linux-gnu/bits/sys_errlist.h /usr/include/stdlib.h:
 /usr/include/unistd.h /usr/include/x86_64-linux-gnu/bits/posix_opt.h:

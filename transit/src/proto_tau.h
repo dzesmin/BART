@@ -6,7 +6,6 @@
 
 /* src/tau.c */
 extern int tau P_((struct transit *tr));
-extern int tau_eclipse P_((struct transit *tr));
 extern void outdebtauex P_((char *name, double **e, prop_samp *ip, double **t, long rn, long w));
 extern void outdebex P_((char *name, double **e, double *r, long rn, long wi, long wf));
 extern void outdebtau P_((char *name, prop_samp *ip, double **t, long wi, long wf));
