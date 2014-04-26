@@ -1,0 +1,107 @@
+Eclipse implementations in Transit
+jasmina@physics.ucf.edu
+
+#################################################################################
+
+23th January, 2014 - eclipse is IN, first implementation
+
+Took current Transit version from Patricio's github and implemented eclipse.
+The following files made or edited:
+transit/src/JB_eclipse.c  - made
+transit/src/slantpath.c   - changed
+transit/src/transit_JB.c  - changed
+transit/src/proto_observable.c - changed
+transit/src/proto_tau.c - changed
+transit/src/Rules.mk   - changed
+transit/include/structures_tr.h - changed
+
+Axillary file made:
+README_JB.txt
+
+The code runs only for eclipse and produces emission spectra.
+
+#################################################################################
+
+19th March, 2014 - eclipse/transit switch implementation
+
+Took Patricio's commit from March 19th, 2014 and implemented
+eclipse/transit choice path. The following files are changed or edited:
+transit/src/eclipse.c  - made
+transit/src/argum.c    - changed
+transit/src/transit.c  - changed
+transit/src/Makefile   - changed
+transit/src/Rules.mk   - changed
+transit/src/proto_eclipse.h - made
+transit/src/proto_argum.h   - changed
+transit/include/structures_tr.h - changed
+transit/include/transit.h -changed
+configuration file - changed
+
+Axillary file updated:
+README_JB.txt
+
+Added eclipse.c with all functions needed for eclipse
+calculation:totaltau_eclipse, tau_eclipse, eclipse_intens,
+emergent_intens, printecl, eclipsepath. In transit.c path solution
+variable and if statement for eclipse/transit choice are added. In
+argum.c new parameter is set, new solutions is defined and read. In
+Rules.mk eclipse source file is added for compiling. In proto_argum.h
+new function defined in argum.c is declared. Proto_eclipse.h is made
+with function defined in eclipse.c. In structure_tr.h eclipse ray
+solution is made, new parameter is added to transithint structure and
+transit structures, new type ray solution enum variable is defined. In
+transit.h eclipse ray solution and proto_eclipse.h are included. In
+Makefile new PUFLAG is added so the code can compile with 'make
+transit'.
+
+##################################################################################
+
+26th April 2014 - intensity grid and flux implementation
+
+Took Patricio's commit from April 26th, 2014 and implemented intensity grid and flux. The following files are changed or edited:
+transit/src/eclipse.c  - changed
+transit/src/argum.c    - changed
+transit/src/transit.c  - changed
+transit/src/observable.c - changed
+transit/src/Rules.mk   - not changed from Second implementation
+transit/src/proto_eclipse.h - changed
+transit/src/proto_argum.h   - changed
+transit/include/structures_tr.h - changed
+transit/include/flags_tr.h -changed
+configuration file - changed
+
+Axillary file updated:
+README_JB.txt
+
+In eclipse.c in the function totaltau_eclipse added 'angle' as a new
+parameter and the difference between two radii is calculated depending
+on cos(angle). A new function intens_grid is made to allocate 2D array
+for intensity grid. The structure is properly initiated and freed
+after each run. In the function tau_eclipse angle is added when
+totaltau_eclipse is called. In the function emergent_intens the
+intensity grid array is filled. A new function 'flux' is made that
+calculates surface flux (distance to the observer is incorporated in
+the output converter). A new function printintens is made that prints
+intensities for each angle to an output. A new function printflux is
+made that prints flux values for each wavelength into a new
+output. Two new functions for freeing memory for local arrays made in
+eclipse.c and intensity grid structure are made and one is called in
+eclipse.c and the other is called in transit.c.  In argum.c a new
+parameter is added, as well the description of the parameter with its
+default values. The case is made that calls a new function that parse
+the characters of the new parameter from a configuration file.  In
+observable.c lines that free memory are moved to transit.c.  In
+transit.c in the main function a loop for calculating tau, emergent
+intensity and flux for all user requested (conf file) angles are
+made. Lines that free memory are moved here.  In proto_eclipse.h new
+functions made in eclipse.c are added.  In proto_argum.c the new
+function made in argum.c is added.  In configuration file new
+parameter ray-grid that defines intensity grid is added .  In
+structure_tr.h declared angles and number of angles in transithint
+structure; angle index, Flux and intensity grid structure are declared
+in transit structure and a new structure grid is made.  In flags_tr.h
+a new flag that defines progress indicator for intensity grid
+calculation is added.
+
+
+##################################################################################
