@@ -114,6 +114,7 @@ processparameters(int argc,            /* Number of command-line args  */
     CLA_SAVEEXT,
     CLA_STARRAD,
     CLA_SOLUTION_TYPE,
+    CLA_INTENS_GRID,
   };
 
   /* Generate the command-line option parser: */
@@ -332,6 +333,8 @@ processparameters(int argc,            /* Number of command-line args  */
      "toomuch, it will never be totally opaque."},
     {"solution-type", CLA_SOLUTION_TYPE, required_argument, "eclipse",
      NULL, "Ray solution type (eclipse or transit)."},
+    {"ray-grid", CLA_INTENS_GRID, required_argument, "0, 20, 40, 60, 80",
+     NULL, "Intensity grid"},
     {NULL, 0, 0, NULL, NULL, NULL}
   };
 
@@ -341,7 +344,7 @@ processparameters(int argc,            /* Number of command-line args  */
   var_cfg.files   = DOTCFGFILE PREPEXTRACFGFILES;
   var_cfg.columns = 70;
 
-  /* Declare transithint:                                                   */
+  /* Declares transithint:                                                  */
   static struct transithint st_trh;
   memset(&st_trh, 0, sizeof(struct transithint));
   /* Assign pointer-to-transithint to transit data structure (ds):          */
@@ -756,11 +759,66 @@ processparameters(int argc,            /* Number of command-line args  */
       if(strncasecmp(optarg,"transit",7)==0)
         hints->path = transit;
       break;
+    case CLA_INTENS_GRID:      /* Intensity grid                  */
+      parseAngles(hints, optarg);
+      break;
     }
   }
   procopt_free();
 
   return 0;
+}
+
+
+/* \fcnfh
+   Parser for angle parameter from configuration file
+   Reads the angles and write them in the transithint variable
+   Returns: zero on success                                      */
+
+int parseAngles(struct transithint *hints, char *slant)
+{
+   /* Declares a copy variable of the text from the 
+      configuration file so we can work on a copy                */
+   char angles_copy[100];
+
+   /* Defines a delimiter */
+   const char s[2] = ",";
+
+   /* Takes characters (tokens) between delimiters               */
+   char *token;
+ 
+   /* Declares floating variable for strings                     */
+   double theta;
+
+   /* Declares variable for number of angles                     */
+   long int angNum = 0;
+
+   /* Declares result of the conversion from string to floats    */
+   int res;
+
+   /* Makes a copy of angles read from cfg file                  */
+   strcpy(angles_copy, slant);
+
+   /* Gets first token                                           */
+   token = strtok(angles_copy, s);
+   
+   /* Walks through other tokens                                 */
+   while( token != NULL ) 
+   {
+      /* Converts strings to floats                              */
+      res=sscanf(token, "%lf", &theta);
+
+      if(res==1){
+        /* Fills out hints variable angles                       */
+        hints->angles[angNum] = theta;
+        angNum++;
+      }
+      token = strtok(NULL, s);
+   }
+   /* Fill out hints variable ann                                */
+   hints->ann = angNum;
+  
+    return 0;
 }
 
 
@@ -793,6 +851,7 @@ acceptsoltype(transit_ray_solution **sol,
     if any of ecl-> name match hname.
     Return: 0 on success,
            -1 if no matching name was available                  */
+
 int accepteclipsetype(eclipse_ray_solution **ecl,
 		  char *hname)
 {

@@ -77,8 +77,7 @@ INCLFLAGS   = -I/usr/X11R6/include -I/home/devel/include \
 LIBFLAGS    = -L/usr/X11R6/lib -L/home/devel/lib
 CPROTOFLAGS = $(INCLFLAGS) $(GSLPRM) -f 3 -m -e -i -X 0
 
-#included old Rojo's prompt command
-#code now compiles with 'make transit'
+# pu/ include flag:
 PUFLAGS="-I../pu/include -L../pu"
 
 NODBGFLAGS  = 

@@ -108,12 +108,14 @@ typedef struct {         /* Ray solution properties:              */
 } transit_ray_solution;
 
 
+
 typedef struct {            /* Ray solution properties:                 */
   const char *name;          /* Ray solution name                        */
   const char *file;          /* Ray solution filename (FINDME)           */
   PREC_RES (*tauEclipse)      /* Optical depth for eclipse per wavenumber */
        (PREC_RES *rad,        /*  Radius array                            */ 
         PREC_RES *ex,         /*  Extinction[rad]                         */  
+        PREC_RES angle,       /*  Ray grid                                */ 
         long nrad);           /* Number of radii elements                */
   PREC_RES (*eclIntenWn)       /* Integrated optical depth:               */
         (struct transit *tr,  /* Main structure                           */
@@ -229,6 +231,11 @@ struct optdepth{
                        calculated: the extinction is assumed to be zero.  */
 };
 
+struct grid{
+  PREC_RES **a;      /* Intensity grid, 2D, [an][wnn]                      */
+};
+
+
 
 struct geometry{
   float smaxis;       /* Semimajor axis                                    */
@@ -330,7 +337,9 @@ struct transithint{
   PREC_NREC ot;         /* Radius index at which to print output from tau    */
   prop_samp rads, wavs, wns; /* Sampling properties of radius, wavelength
                                 and wavenumber                               */
-  RaySol  path;         /* Eclipse or transit ray solution. */
+  RaySol  path;         /* Eclipse or transit ray solution.                  */
+  long int ann;        /* Number of angles                                  */
+  PREC_RES angles[10];  /* Angles                                            */
   prop_samp ips;        /* Impact parameter sampling, at what radius
                            sampling does the user wants ray optical depth to
                            be calculated                                     */
@@ -394,6 +403,8 @@ struct transit{
                        have to look for transitions                          */
   PREC_RES wnmi;    /* Amount of cm-1 not trusted at the beginning           */
   PREC_RES wnmf;    /* Amount of cm-1 not trusted at the end                 */
+  long int angleIndex; /* Index of the current angle                        */
+  PREC_RES *Flux;   /* Flux for eclipse                                      */
   prop_samp rads, wavs, wns; /* Sampling properties of radius, wavelength
                                 and wavenumber                               */
   prop_samp ips;    /* Impact parameter sampling, at what radius sampling does
@@ -422,6 +433,7 @@ struct transit{
     struct lineinfo    *li;
     struct atm_data    *at;
     struct extinction  *ex;
+    struct grid         *intens;
     struct optdepth    *tau;
     struct idxref      *ir;
     struct geometry    *sg;

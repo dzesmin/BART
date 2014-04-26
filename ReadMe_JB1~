@@ -34,5 +34,3 @@ In configuration file new parameter ray-grid that defines intensity grid is adde
 In structure_tr.h declared angles and number of angles in transithint structure; angle index, Flux and intensity grid structure are declared in transit structure and a new structure grid is made.
 In flags_tr.h a new flag that defines progress indicator for intensity grid calculation is added.
 
-
-##################################################################################
