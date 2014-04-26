@@ -3,12 +3,44 @@ jasmina@physics.ucf.edu
 
 #################################################################################
 
+23th January, 2014 - eclipse is IN, first implementation
+
+Took current Transit version from Patricio's github and implemented eclipse.
+The following files made or edited:
+transit/src/JB_eclipse.c  - made
+transit/src/slantpath.c   - changed
+transit/src/transit_JB.c  - changed
+transit/src/proto_observable.c - changed
+transit/src/proto_tau.c - changed
+transit/src/Rules.mk   - changed
+transit/include/structures_tr.h - changed
+
+Axillary file made:
+README_JB.txt
+
+The code runs only for eclipse and produces emission spectra.
+
+#################################################################################
+
 19th March, 2014 - eclipse/transit switch implementation
 
 Took Patricio's commit from March 19th, 2014 and implemented
-eclipse/transit choice path. Currently committing just changes
-compared to his commit so he can pull them (take next commit for the
-full code). Added eclipse.c with all functions needed for eclipse
+eclipse/transit choice path. The following files are changed or edited:
+transit/src/eclipse.c  - made
+transit/src/argum.c    - changed
+transit/src/transit.c  - changed
+transit/src/Makefile   - changed
+transit/src/Rules.mk   - changed
+transit/src/proto_eclipse.h - made
+transit/src/proto_argum.h   - changed
+transit/include/structures_tr.h - changed
+transit/include/transit.h -changed
+configuration file - changed
+
+Axillary file updated:
+README_JB.txt
+
+Added eclipse.c with all functions needed for eclipse
 calculation:totaltau_eclipse, tau_eclipse, eclipse_intens,
 emergent_intens, printecl, eclipsepath. In transit.c path solution
 variable and if statement for eclipse/transit choice are added. In
@@ -37,9 +69,9 @@ transit/src/proto_argum.h   - changed
 transit/include/structures_tr.h - changed
 transit/include/flags_tr.h -changed
 configuration file - changed
-Axillary files made:
+
+Axillary file updated:
 README_JB.txt
-Eclipse-FluxImplementation
 
 In eclipse.c in the function totaltau_eclipse added 'angle' as a new
 parameter and the difference between two radii is calculated depending
