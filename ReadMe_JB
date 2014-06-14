@@ -29,7 +29,7 @@ eclipse/transit choice path. The following files are changed or edited:
 transit/src/eclipse.c  - made
 transit/src/argum.c    - changed
 transit/src/transit.c  - changed
-transit/src/Makefile   - changed
+transit/Makefile   - changed
 transit/src/Rules.mk   - changed
 transit/src/proto_eclipse.h - made
 transit/src/proto_argum.h   - changed

@@ -4,6 +4,12 @@
 #define P_(s) ()
 #endif
 
+/* Revision        March 19th,   2014 Jasmina Blecic                          
+                   implemented switch eclipse/transit, added new functions  */
+/* Revision        April 26th,   2014 Jasmina Blecic                          
+                   implemented intensity grid and flux, added new functions */
+
+
 /* src/eclipse.c */
 extern int tau_eclipse P_((struct transit *tr));
 extern void printintens P_((struct transit *tr));

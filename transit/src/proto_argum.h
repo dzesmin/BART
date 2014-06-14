@@ -4,6 +4,12 @@
 #define P_(s) ()
 #endif
 
+/* Revision        March 19th,   2014 Jasmina Blecic                          
+                   implemented switch eclipse/transit, added new functions  */
+/* Revision        April 26th,   2014 Jasmina Blecic                          
+                   implemented intensity grid and flux, added new functions */
+
+
 /* src/argum.c */
 extern int processparameters P_((int argc, char **argv, struct transit *tr));
 extern int acceptsoltype P_((transit_ray_solution **sol, char *hname));

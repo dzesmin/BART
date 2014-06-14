@@ -19,6 +19,13 @@
  * 02111-1307, USA.
  */
 
+/* Revision        January 23rd, 2014 Jasmina Blecic                          
+                   implemented eclipse                                     */
+/* Revision        March 19th,   2014 Jasmina Blecic                          
+                   implemented switch eclipse/transit                      */
+/* Revision        April 26th,   2014 Jasmina Blecic                          
+                   implemented intensity grid and flux                     */
+
 /* TBD: calloc checks */
 
 #include <transit.h>
